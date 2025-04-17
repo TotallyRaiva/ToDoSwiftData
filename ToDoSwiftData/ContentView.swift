@@ -42,41 +42,48 @@ struct ContentView: View {
                     completed: tasks.filter { $0.isCompleted }.count,
                     pending: tasks.filter { !$0.isCompleted }.count
                 )
-                if filteredTasks.isEmpty {
-                    VStack(spacing: 8) {
-                        Image(systemName: "tray")
-                            .font(.system(size: 36))
-                            .foregroundColor(.gray)
-                        Text("No tasks here")
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.top, 60)
-                }
-                Picker("Filter", selection: $selectedFilter) {
-                    ForEach(TaskFilter.allCases) { filter in
-                        Text(filter.rawValue).tag(filter)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-                .onChange(of: selectedFilter) {
-                    fetchTasks()
-                }
 
-                List {
-                    ForEach(filteredTasks) { task in
-                        TaskRow(task: task)
-                    }
-                    .onDelete { indexSet in
-                        withAnimation {
-                            for index in indexSet {
-                                let taskToDelete = filteredTasks[index]
-                                modelContext.delete(taskToDelete)
+                ScrollView {
+                    VStack {
+                        Picker("Filter", selection: $selectedFilter) {
+                            ForEach(TaskFilter.allCases) { filter in
+                                Text(filter.rawValue).tag(filter)
                             }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal)
+                        .onChange(of: selectedFilter) {
+                            fetchTasks()
+                        }
+
+                        if filteredTasks.isEmpty {
+                            VStack(spacing: 8) {
+                                Image(systemName: "tray")
+                                    .font(.system(size: 36))
+                                    .foregroundColor(.gray)
+                                Text("No tasks here")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.top, 60)
+                        } else {
+                            List {
+                                ForEach(filteredTasks) { task in
+                                    TaskRow(task: task)
+                                }
+                                .onDelete { indexSet in
+                                    withAnimation {
+                                        for index in indexSet {
+                                            let taskToDelete = filteredTasks[index]
+                                            modelContext.delete(taskToDelete)
+                                        }
+                                    }
+                                }
+                            }
+                            .id(refreshTrigger)
+                            .frame(minHeight: 300) // Optional: helps List play nice in ScrollView
                         }
                     }
                 }
-                .id(refreshTrigger)
             }
             .navigationTitle("TASKS")
             .toolbar {

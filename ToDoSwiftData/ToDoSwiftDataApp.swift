@@ -10,17 +10,15 @@ import SwiftData
 
 @main
 struct ToDoSwiftDataApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Task.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
+    let sharedModelContainer: ModelContainer = {
+        let schema = Schema([Task.self])
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            url: FileManager.default
+                .containerURL(forSecurityApplicationGroupIdentifier: "group.com.raiva.todoswiftdata")!
+                .appendingPathComponent("Tasks.sqlite")
+        )
+        return try! ModelContainer(for: Task.self, configurations: modelConfiguration)
     }()
 
     var body: some Scene {

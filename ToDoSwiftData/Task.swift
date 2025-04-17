@@ -4,17 +4,18 @@
 //
 //  Created by Reiwa on 16.04.2025.
 //
-import Foundation   
+import Foundation
 import SwiftData
 
-
 @Model
-class Task {
-    var title: String
-    var isCompleted: Bool
-    var timestamp: Date
-    
-    init (title: String, isCompleted: Bool = false, timestamp: Date = .now) {
+public class Task: Identifiable {
+    public var id: UUID
+    public var title: String
+    public var isCompleted: Bool
+    public var timestamp: Date
+
+    public init(title: String, isCompleted: Bool = false, timestamp: Date = .now) {
+        self.id = UUID()
         self.title = title
         self.isCompleted = isCompleted
         self.timestamp = timestamp

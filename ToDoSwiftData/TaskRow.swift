@@ -13,11 +13,16 @@ struct TaskRow: View {
     var body: some View {
         HStack {
             Button(action: {
-                task.isCompleted.toggle()
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                       task.isCompleted.toggle()
+                    
+                   }
             }) {
                 Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                     .foregroundColor(task.isCompleted ? .green : .gray)
                     .imageScale(.large)
+                    .scaleEffect(task.isCompleted ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 0.2), value: task.isCompleted)
             }
             Text(task.title)
                 .strikethrough(task.isCompleted)

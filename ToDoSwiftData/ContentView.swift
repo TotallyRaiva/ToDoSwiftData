@@ -42,6 +42,16 @@ struct ContentView: View {
                     completed: tasks.filter { $0.isCompleted }.count,
                     pending: tasks.filter { !$0.isCompleted }.count
                 )
+                if filteredTasks.isEmpty {
+                    VStack(spacing: 8) {
+                        Image(systemName: "tray")
+                            .font(.system(size: 36))
+                            .foregroundColor(.gray)
+                        Text("No tasks here")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 60)
+                }
                 Picker("Filter", selection: $selectedFilter) {
                     ForEach(TaskFilter.allCases) { filter in
                         Text(filter.rawValue).tag(filter)
@@ -74,7 +84,7 @@ struct ContentView: View {
                     Button {
                         showingNewTaskView.toggle()
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
                     }
                 }
             }

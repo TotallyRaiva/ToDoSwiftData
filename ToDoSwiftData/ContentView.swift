@@ -37,6 +37,11 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                StatsView(
+                    total: tasks.count,
+                    completed: tasks.filter { $0.isCompleted }.count,
+                    pending: tasks.filter { !$0.isCompleted }.count
+                )
                 Picker("Filter", selection: $selectedFilter) {
                     ForEach(TaskFilter.allCases) { filter in
                         Text(filter.rawValue).tag(filter)
@@ -63,7 +68,7 @@ struct ContentView: View {
                 }
                 .id(refreshTrigger)
             }
-            .navigationTitle("Tasks")
+            .navigationTitle("TASKS")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
